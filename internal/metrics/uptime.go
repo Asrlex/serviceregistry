@@ -11,8 +11,8 @@ var (
 
 	Uptime = prometheus.NewGaugeFunc(
 		prometheus.GaugeOpts{
-			Name: "scheduler_service_uptime_seconds",
-			Help: "Time since the scheduler service started",
+			Name: "service_registry_uptime_seconds",
+			Help: "Time since the service registry started",
 		},
 		func() float64 {
 			return time.Since(startTime).Seconds()

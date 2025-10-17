@@ -8,54 +8,34 @@ import (
 )
 
 var (
-	JobsRegisteredTotal = prometheus.NewCounter(
-		prometheus.CounterOpts{
-			Name: string(TotalJobs),
-			Help: "Total number of jobs registered",
-		},
-	)
-
-	JobsActive = prometheus.NewGauge(
+	ServicesRegisteredTotal = prometheus.NewGauge(
 		prometheus.GaugeOpts{
-			Name: string(ActiveJobs),
-			Help: "Current number of active jobs",
+			Name: string(TotalServices),
+			Help: "Total number of services registered",
 		},
 	)
 
-	JobExecutions = prometheus.NewCounterVec(
-		prometheus.CounterOpts{
-			Name: string(TotalExecutions),
-			Help: "Total number of job executions",
+	ServicesHealthy = prometheus.NewGauge(
+		prometheus.GaugeOpts{
+			Name: string(HealthyServices),
+			Help: "Current number of healthy services",
 		},
-		[]string{"job_name"},
 	)
 
-	JobFailures = prometheus.NewCounterVec(
-		prometheus.CounterOpts{
-			Name: string(TotalFailures),
-			Help: "Total number of job execution failures",
+	ServicesUnhealthy = prometheus.NewGauge(
+		prometheus.GaugeOpts{
+			Name: string(UnhealthyServices),
+			Help: "Total number of unhealthy services",
 		},
-		[]string{"job_name"},
-	)
-
-	JobDuration = prometheus.NewHistogramVec(
-		prometheus.HistogramOpts{
-			Name:    string(ExecutionDuration),
-			Help:    "Job execution time in seconds",
-			Buckets: prometheus.LinearBuckets(0.1, 0.5, 10),
-		},
-		[]string{"job_name"},
 	)
 )
 
 func Init() {
 	sync.OnceFunc(func() {
 		prometheus.MustRegister(
-			JobsRegisteredTotal,
-			JobsActive,
-			JobExecutions,
-			JobFailures,
-			JobDuration,
+			ServicesRegisteredTotal,
+			ServicesHealthy,
+			ServicesUnhealthy,
 			Uptime,
 			collectors.NewGoCollector(),
 			collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
