@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  serviceregistry:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: serviceregistry
+    ports:
+      - "8080:8080"
+    environment:
+      - GLOBAL_API_KEY=your_global_api_key_here
+      - PORT=8080
+      - DB_PATH=./jobs.db
+      - KAFKA_BROKERS=kafka:9092
+      - KAFKA_TOPIC=job-events
+      - KAFKA_DLQ_TOPIC=job-events-dlq
+    restart: unless-stopped
+    networks:
+      - microservices-net
+
+networks:
+  microservices-net:
+    external: true
